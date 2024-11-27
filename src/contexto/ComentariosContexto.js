@@ -8,6 +8,8 @@ const ComentariosContexto = createContext()
 export const ComentariosProvider = ({ children }) => {
 
     const [comments, setComments] = useState()
+    const [isLoading , setIsLoading ] =
+            useState(true)
 
     useEffect(()=>{
       fetchComentarios()
@@ -19,14 +21,30 @@ export const ComentariosProvider = ({ children }) => {
        const response = await fetch('http://localhost:5000/comentarios')
        const comentariosAPI = await response.json()
       setComments(comentariosAPI)
+      setIsLoading (false)
     }
 
-    const borrarItem= (id) =>{
+    const addItem = async (newComentario) => {
+      const response = await fetch('http://localhost:5000/comentarios', {
+          method: 'POST',
+          headers: {
+              'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(newComentario),
+      });
+  
+      const data = await response.json();
+      setComments([data, ...comments]);
+  };
+  
+
+    const borrarItem=  async (id) =>{
         if(  window.confirm('¿Estas seguro que quieres borrar el comentario?')){
+          const response = 
+          await fetch(`http://localhost:5000/comentarios/${id}`,
+          { method :'DELETE'}) 
           
-          //asignar nuevo estado a comments
-          //filter:para quitar los comentarios
-          //cuyo id concuerde con el parametro id
+          
           setComments(comments.filter((c)=> c.id !== id))     
         }  
       }
@@ -36,7 +54,11 @@ export const ComentariosProvider = ({ children }) => {
             <ComentariosContexto.Provider 
                     value={{ comments, 
                              setComments,
-                             borrarItem }} >
+                             isLoading,
+                             setIsLoading,
+                             addItem,
+                             borrarItem,
+                              }} >
         { children }
     </ComentariosContexto.Provider>)
 }

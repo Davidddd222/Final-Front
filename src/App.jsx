@@ -14,7 +14,7 @@ function App() {
 
   
     const titulo = "App de Comentarios";
-    const Autor = "David Giron"
+    const Autor = "David Vergara"
     const ficha = "2902093"
     const loading = false;
     if (loading === true) return (<h1> Cargando comentarios.. </h1>)        

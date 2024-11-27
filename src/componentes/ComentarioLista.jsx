@@ -6,16 +6,21 @@ import { AnimatePresence, motion } from 'framer-motion'
 
 function ComentarioLista () {
 
-      const {comments} = 
+      const {comments, isLoading} = 
             useContext(ComentariosContexto) 
      
       
 
-      if (comments.length === 0 || !comments ) {
+      if ( !isLoading && 
+            (comments.length === 0
+                  || !comments )) {
             return <p>No hay comentarios</p>
-      }else{
+      }{
             
-      return (
+      return  isLoading? 
+      (<h2>  Cargando... </h2>)
+      :
+      (
             <div className='comments'>
                   <AnimatePresence>
                         <ul>
